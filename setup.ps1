@@ -77,9 +77,6 @@ try {
         throw "This line supports Windows 11 (x64) and Macs with Apple Silicon. Your machine is Windows $($version.Major).$($version.Minor) build $($version.Build) ($architecture)."
     }
 
-    Write-Host "Setting up $Repo on Windows 11 ($architecture)."
-    Write-Host 'You need administrator rights on this machine and a GitHub account in the organization.'
-
     $needsGit = -not (Find-GitBash)
     $needsGh = -not (Get-Command gh -ErrorAction SilentlyContinue)
 
