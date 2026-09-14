@@ -32,6 +32,47 @@ function Update-PathFromRegistry {
     $env:Path = (@($machine, $user) | Where-Object { $_ }) -join ';'
 }
 
+# The window this runs in is Windows PowerShell 5.1's, and three of its defaults hurt a person
+# watching an install, all measured on a clean Windows 11 machine on 2026-09-14:
+#  - QuickEdit: one click in the window selects text and freezes every program writing to the
+#    console until Esc, which looks exactly like a hang. Off for the run, restored at the end.
+#  - No virtual terminal processing: the colours and progress bars gh, git and Unity draw arrive
+#    as literal text such as "[2m". On, and left on - it only helps.
+#  - OEM output encoding: a tick mark prints as "?". UTF-8, and left as well.
+$consoleSignature = @'
+using System;
+using System.Runtime.InteropServices;
+public static class StarterConsole {
+    [DllImport("kernel32.dll")] public static extern IntPtr GetStdHandle(int handle);
+    [DllImport("kernel32.dll")] public static extern bool GetConsoleMode(IntPtr handle, out uint mode);
+    [DllImport("kernel32.dll")] public static extern bool SetConsoleMode(IntPtr handle, uint mode);
+}
+'@
+$originalInputMode = $null
+
+function Set-ConsoleForTheRun {
+    try {
+        Add-Type -TypeDefinition $consoleSignature -ErrorAction Stop
+        $mode = 0
+        $stdin = [StarterConsole]::GetStdHandle(-10)
+        if ([StarterConsole]::GetConsoleMode($stdin, [ref] $mode)) {
+            $script:originalInputMode = $mode
+            [void] [StarterConsole]::SetConsoleMode($stdin, ($mode -bor 0x80) -band (-bnot 0x40))
+        }
+        $stdout = [StarterConsole]::GetStdHandle(-11)
+        if ([StarterConsole]::GetConsoleMode($stdout, [ref] $mode)) {
+            [void] [StarterConsole]::SetConsoleMode($stdout, $mode -bor 0x4)
+        }
+        [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    } catch { }
+}
+
+function Restore-Console {
+    if ($null -ne $script:originalInputMode) {
+        try { [void] [StarterConsole]::SetConsoleMode([StarterConsole]::GetStdHandle(-10), $script:originalInputMode) } catch { }
+    }
+}
+
 function Install-WingetPackage([string] $id, [string] $label) {
     Write-Step "Installing $label"
     winget install --id $id -e --source winget --scope machine --silent --accept-source-agreements --accept-package-agreements
@@ -60,6 +101,8 @@ function Find-GitBash {
 }
 
 try {
+    Set-ConsoleForTheRun
+
     if (-not $Repo) {
         Write-Host 'This line needs to know which project to set up, and it was pasted without that part.'
         Write-Host ''
@@ -127,4 +170,7 @@ catch {
     Write-Host ''
     Write-Host $_.Exception.Message -ForegroundColor Red
     Write-Host $contact -ForegroundColor Red
+}
+finally {
+    Restore-Console
 }
