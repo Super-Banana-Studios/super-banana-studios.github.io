@@ -1,7 +1,5 @@
 # setup-git
 
-> **Not ready yet.** The scripts are still being written, so the lines below do not work. This repository is the public placeholder they will land in.
-
 One command that takes a bare machine to a working checkout of a Super Banana project.
 
 This starter is the part that has to run before the machine has any GitHub authentication, so it lives in a public repository. It installs `git`, `git-lfs` and `gh`, signs you in to GitHub as yourself, checks that you have access, and then fetches and runs the setup script of the project repository you pass to it. Everything project specific - the checkout, the Unity Editor, Claude Code and its plugins - lives in that project's own script, not here.
@@ -27,6 +25,40 @@ Ask the person who onboarded you for the line. It already carries the project re
 You need local administrator rights on the machine and a GitHub account that is already a member of the organization. If you have neither, ask Ivan or Nikolay before you run anything.
 
 Supported machines: Windows 11 x64 and Apple Silicon macOS. Anything else stops with a message.
+
+### Options
+
+| What | macOS | Windows |
+| --- | --- | --- |
+| Project repository, required | first argument, after `--` | `-Repo <owner>/<repo>` |
+| Branch to check out | `--branch proto/<name>` | `-Branch proto/<name>` |
+| Where the checkout goes | `--path <directory>` | `-Path <directory>` |
+
+Left out, the branch is the repository's default branch and the checkout lands in a directory named after the repository, under the directory you are in.
+
+On macOS the `--` is what makes the words after it arguments of the script rather than of `bash` itself, so it is part of the line even when nothing follows the repository.
+
+## What it does
+
+1. Refuses any machine that is not Windows 11 x64 or Apple Silicon macOS.
+2. Installs `git`, `git-lfs` and `gh` when they are missing - winget on Windows, Homebrew on macOS. What is already there is left alone.
+3. Signs you in with `gh auth login` in your browser, and points `git` at that sign-in with `gh auth setup-git`.
+4. Checks that your account can read the project repository, and stops with a name to ask when it cannot.
+5. Downloads `tools/setup.sh` from the **main** branch of that repository and hands over to it, passing on the same repository, branch and path.
+
+Running it a second time changes nothing: every step checks before it acts.
+
+## For the person who maintains a project
+
+Put the rest of the setup in `tools/setup.sh` on your project's `main` branch. The starter runs it as:
+
+```
+bash tools/setup.sh <owner>/<repo> [--branch <branch>] [--path <directory>]
+```
+
+The repository always arrives as the first argument; `--branch` and `--path` arrive only when the person gave them. `main` is always the source of the file, so the script has to be identical on every branch of the project.
+
+This starter stays almost frozen - it is published as a URL that must never be reissued, so anything that will keep changing belongs in your project's script instead.
 
 ## What it does not do
 
