@@ -153,7 +153,9 @@ step "GitHub sign-in"
 if gh auth status --hostname github.com >/dev/null 2>&1; then
 	say "Already signed in as $(gh api user --jq .login 2>/dev/null)."
 else
-	say "A browser window opens - sign in with your GitHub account, then come back here."
+	say "The GitHub tool asks two things first: whether git may use this sign-in too - answer Y - and"
+	say "then shows a code and waits for Enter. Enter opens the browser: sign in with your GitHub"
+	say "account there, type the code, then come back here."
 	gh auth login --hostname github.com --web --git-protocol https ||
 		fail "The GitHub sign-in did not finish, so nothing further can be downloaded."
 fi
