@@ -40,23 +40,27 @@ On macOS the `--` is what makes the words after it arguments of the script rathe
 
 ## The short form
 
-`irm ... | iex` cannot pass arguments to what it runs, so a project that wants a line with nothing to fill in gets a file of its own here, naming that project and calling the generic half above. The Unity skeleton has one:
+A project that wants a line with nothing to fill in gets a file of its own here, naming that project and calling the generic half above. The Unity skeleton has one, `skel`:
 
 **Windows 11 (x64)** - PowerShell:
 
 ```powershell
-irm https://super-banana-studios.github.io/win | iex
+irm https://super-banana-studios.github.io/skel | iex
 ```
 
 **macOS (Apple Silicon)** - Terminal:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/mac)"
+/bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/skel-mac)"
 ```
 
-`curl ... | bash` is not an option on macOS: the pipe becomes the script's standard input, and the three sign-ins read from it - gh and claude would see end of file instead of the keyboard. `mac` writes the starter to a file and runs it from there.
+`curl ... | bash` is not an option on macOS: the pipe becomes the script's standard input, and the three sign-ins read from it - gh and claude would see end of file instead of the keyboard. `skel-mac` writes the starter to a file and runs it from there.
 
-A second project needs one more pair of files like these, and nothing else.
+A second project needs one more pair of files like these, and nothing else. Two forms of the line exist because `irm ... | iex` cannot pass arguments - the script arrives as text and nothing else. The generic half is still reachable with an argument, in the idiom Chocolatey and Scoop publish:
+
+```powershell
+iex "& { $(irm https://super-banana-studios.github.io/setup.ps1) } -Repo <owner>/<repo>"
+```
 
 ## What it does
 

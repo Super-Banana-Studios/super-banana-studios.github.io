@@ -1,6 +1,6 @@
 # The short form of the line for the Unity skeleton, on Windows:
 #
-#   irm https://super-banana-studios.github.io/win | iex
+#   irm https://super-banana-studios.github.io/skel | iex
 #
 # `irm ... | iex` cannot pass arguments to what it runs - the script arrives as text and nothing
 # else - so the project this sets up is named here rather than on the command line. setup.ps1
