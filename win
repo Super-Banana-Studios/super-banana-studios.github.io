@@ -1,0 +1,12 @@
+# The short form of the line for the Unity skeleton, on Windows:
+#
+#   irm https://super-banana-studios.github.io/win | iex
+#
+# `irm ... | iex` cannot pass arguments to what it runs - the script arrives as text and nothing
+# else - so the project this sets up is named here rather than on the command line. setup.ps1
+# next to this file is the generic half and takes the repository as an argument; one more file
+# like this one is all a second project needs.
+#
+# No `exit` anywhere: this runs inside the person's own PowerShell window, and `exit` closes that
+# window rather than this script (measured on 5.1.26100.9444).
+& ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo Super-Banana-Studios/unity-skeleton

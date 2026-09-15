@@ -1,8 +1,8 @@
-# setup-git
+# super-banana-studios.github.io
 
 One command that takes a bare machine to a working checkout of a Super Banana project.
 
-This starter is the part that has to run before the machine has any GitHub authentication, so it lives in a public repository. It installs `git`, `git-lfs` and `gh`, signs you in to GitHub as yourself, checks that you have access, and then fetches and runs the setup script of the project repository you pass to it. Everything project specific - the checkout, the Unity Editor, Claude Code and its plugins - lives in that project's own script, not here.
+This starter is the part that has to run before the machine has any GitHub authentication, so it lives in a public repository, served at https://super-banana-studios.github.io. It installs `git`, `git-lfs` and `gh`, signs you in to GitHub as yourself, checks that you have access, and then fetches and runs the setup script of the project repository you pass to it. Everything project specific - the checkout, the Unity Editor, Claude Code and its plugins - lives in that project's own script, not here.
 
 Nothing here is project specific: the project repository is an argument, so one starter serves every project.
 
@@ -13,13 +13,13 @@ Ask the person who onboarded you for the line. It already carries the project re
 **macOS (Apple Silicon)** - Terminal:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Super-Banana-Studios/setup-git/main/setup.sh)" -- <owner>/<repo>
+/bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/setup.sh)" -- <owner>/<repo>
 ```
 
 **Windows 11 (x64)** - PowerShell:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Super-Banana-Studios/setup-git/main/setup.ps1))) -Repo <owner>/<repo>
+& ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo <owner>/<repo>
 ```
 
 You need local administrator rights on the machine and a GitHub account that is already a member of the organization. If you have neither, ask Ivan or Nikolay before you run anything.
@@ -37,6 +37,26 @@ Supported machines: Windows 11 x64 and Apple Silicon macOS. Anything else stops 
 Left out, the branch is the repository's default branch and the checkout lands in a directory named after the repository, under the directory you are in.
 
 On macOS the `--` is what makes the words after it arguments of the script rather than of `bash` itself, so it is part of the line even when nothing follows the repository.
+
+## The short form
+
+`irm ... | iex` cannot pass arguments to what it runs, so a project that wants a line with nothing to fill in gets a file of its own here, naming that project and calling the generic half above. The Unity skeleton has one:
+
+**Windows 11 (x64)** - PowerShell:
+
+```powershell
+irm https://super-banana-studios.github.io/win | iex
+```
+
+**macOS (Apple Silicon)** - Terminal:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/mac)"
+```
+
+`curl ... | bash` is not an option on macOS: the pipe becomes the script's standard input, and the three sign-ins read from it - gh and claude would see end of file instead of the keyboard. `mac` writes the starter to a file and runs it from there.
+
+A second project needs one more pair of files like these, and nothing else.
 
 ## What it does
 

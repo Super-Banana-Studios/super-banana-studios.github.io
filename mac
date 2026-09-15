@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# The short form of the line for the Unity skeleton, on macOS:
+#
+#   /bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/mac)"
+#
+# The project this sets up is named here rather than on the command line, so the line carries no
+# arguments. setup.sh next to this file is the generic half and takes the repository as an
+# argument; one more file like this one is all a second project needs.
+#
+# Not `curl ... | bash`: that makes the pipe the script's standard input, and the sign-ins below
+# read from it - gh and claude would both see end of file instead of the keyboard. The starter is
+# written to a file and run from there, which leaves standard input the terminal it came from.
+
+set -u
+
+starter=$(mktemp -t superb-setup) || {
+	printf '\nThis machine would not give a temporary file to work in.\nAsk Ivan Murashka (@imurashka) or Nikolay (@nternovoy).\n' >&2
+	exit 1
+}
+trap 'rm -f "$starter"' EXIT
+
+if ! curl -fsSL https://super-banana-studios.github.io/setup.sh -o "$starter"; then
+	printf '\nThe setup script could not be downloaded. Check that you are online, then run the line again.\nAsk Ivan Murashka (@imurashka) or Nikolay (@nternovoy).\n' >&2
+	exit 1
+fi
+
+/bin/bash "$starter" Super-Banana-Studios/unity-skeleton

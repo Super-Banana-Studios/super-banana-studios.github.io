@@ -11,7 +11,7 @@
 set -u
 
 CONTACT="Ask Ivan Murashka (@imurashka) or Nikolay (@nternovoy)."
-POWERSHELL_LINE='& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Super-Banana-Studios/setup-git/main/setup.ps1))) -Repo <owner>/<repo>'
+POWERSHELL_LINE='& ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo <owner>/<repo>'
 
 repo=""
 branch=""
