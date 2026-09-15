@@ -150,6 +150,24 @@ fi
 git lfs install >/dev/null || fail "git lfs install failed, so large files would not be downloaded."
 
 step "GitHub sign-in"
+# GH_TOKEN and GITHUB_TOKEN beat a stored sign-in at everything, and while either is set the
+# GitHub tool refuses to sign anyone in at all - "The value of the GITHUB_TOKEN environment
+# variable is being used for authentication". A machine with a stale one in its shell profile
+# therefore stops here: measured on a colleague's Mac on 2026-09-15. A stale token also makes
+# the access check below fail on an account that can read the repository. The project's own
+# script drops the two the same way, but this step runs first, so it has to do it too; exec
+# below carries the cleared environment on.
+if [ -n "${GH_TOKEN:-}" ] || [ -n "${GITHUB_TOKEN:-}" ]; then
+	unset GH_TOKEN GITHUB_TOKEN
+	say "Your shell sets a GitHub token in GH_TOKEN or GITHUB_TOKEN, and GitHub's tool uses it"
+	say "instead of your account. It is ignored for this run, and you sign in as yourself below."
+	for profile in "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+		if [ -f "$profile" ] && grep -q "GH_TOKEN\|GITHUB_TOKEN" "$profile" 2>/dev/null; then
+			say "It is set in $profile and comes back in every new terminal - take it out there."
+			break
+		fi
+	done
+fi
 if gh auth status --hostname github.com >/dev/null 2>&1; then
 	say "Already signed in as $(gh api user --jq .login 2>/dev/null)."
 else
