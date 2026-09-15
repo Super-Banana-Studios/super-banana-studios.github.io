@@ -2,7 +2,7 @@
 #
 # The short form of the line for the Unity skeleton, on macOS:
 #
-#   /bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/mac)"
+#   /bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/skel-mac)"
 #
 # The project this sets up is named here rather than on the command line, so the line carries no
 # arguments. setup.sh next to this file is the generic half and takes the repository as an
