@@ -1,7 +1,7 @@
 #
 # setup-git - the Windows entry point of "one line from a bare machine to a working checkout".
 #
-#   & ([scriptblock]::Create((irm https://raw.githubusercontent.com/Super-Banana-Studios/setup-git/main/setup.ps1))) -Repo <owner>/<repo>
+#   & ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo <owner>/<repo>
 #
 # This file installs only what bash needs - Git for Windows (which brings bash, git-lfs and
 # curl) and the GitHub CLI - and then hands over to setup.sh, which is the one implementation
@@ -14,7 +14,7 @@ param(
 )
 
 $contact = 'Ask Ivan Murashka (@imurashka) or Nikolay (@nternovoy).'
-$starterUrl = 'https://raw.githubusercontent.com/Super-Banana-Studios/setup-git/main/setup.sh'
+$starterUrl = 'https://super-banana-studios.github.io/setup.sh'
 
 function Write-Step([string] $text) {
     Write-Host ''

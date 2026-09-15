@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Super Banana Studios - machine setup</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0 auto; padding: 3rem 1.25rem; max-width: 46rem;
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 .5rem; }
+  h2 { font-size: 1rem; margin: 2rem 0 .5rem; }
+  p { margin: .5rem 0; }
+  pre {
+    margin: .5rem 0; padding: .75rem 1rem; overflow-x: auto;
+    border: 1px solid rgba(128, 128, 128, .35); border-radius: 6px;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .muted { opacity: .7; font-size: .9rem; }
+</style>
+</head>
+<body>
+<h1>Super Banana Studios</h1>
+<p>This page exists to host one thing: the command that takes a bare machine to a working checkout of one of our projects. It installs git, Git LFS and the GitHub CLI, signs you in as yourself, and then runs that project's own setup script.</p>
+
+<h2>Windows 11 (x64), in PowerShell</h2>
+<pre>&amp; ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo &lt;owner&gt;/&lt;repo&gt;</pre>
+
+<h2>macOS (Apple Silicon), in Terminal</h2>
+<pre>/bin/bash -c "$(curl -fsSL https://super-banana-studios.github.io/setup.sh)" -- &lt;owner&gt;/&lt;repo&gt;</pre>
+
+<p class="muted">Ask the person who onboarded you for the line - theirs already carries the project, and some projects have a shorter form of it. You need local administrator rights on the machine and a GitHub account that is already a member of the organization.</p>
+<p class="muted"><a href="https://github.com/Super-Banana-Studios/super-banana-studios.github.io">The scripts are here.</a></p>
+</body>
+</html>
