@@ -40,12 +40,12 @@ On macOS the `--` is what makes the words after it arguments of the script rathe
 
 ## The short form
 
-A project that wants a line with nothing to fill in gets a file of its own here, naming that project and calling the generic half above. The Unity skeleton has one, `skel`:
+A project that wants a line with nothing to fill in gets a file of its own here, naming that project and calling the generic half above. The Unity skeleton has one, `skel-win` and `skel-mac`:
 
 **Windows 11 (x64)** - PowerShell:
 
 ```powershell
-irm https://super-banana-studios.github.io/skel | iex
+irm https://super-banana-studios.github.io/skel-win | iex
 ```
 
 **macOS (Apple Silicon)** - Terminal:
