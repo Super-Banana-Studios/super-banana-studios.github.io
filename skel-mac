@@ -25,4 +25,20 @@ if ! curl -fsSL https://super-banana-studios.github.io/setup.sh -o "$starter"; t
 	exit 1
 fi
 
-/bin/bash "$starter" Super-Banana-Studios/unity-skeleton
+checkout_file="${TMPDIR:-/tmp}"
+checkout_file="${checkout_file%/}/superb-setup.checkout"
+rm -f "$checkout_file"
+
+/bin/bash "$starter" Super-Banana-Studios/unity-skeleton || exit
+
+# The project's setup script writes the folder of the checkout into that file when it finishes.
+# A script cannot move the terminal that started it, and people new to a terminal type `claude`
+# right after the run, wherever the window is (Ivan, 2026-09-25) - so the run ends in a fresh
+# shell inside the checkout, which also reads the PATH the run wrote into the shell profile.
+# `exit` in it returns to the old shell and folder.
+checkout=$(head -1 "$checkout_file" 2>/dev/null)
+if [ -t 0 ] && [ -n "$checkout" ] && cd "$checkout" 2>/dev/null; then
+	rm -f "$starter"
+	printf '\nThis window is now in %s - type claude to start.\n' "$checkout"
+	exec "${SHELL:-/bin/zsh}" -l
+fi

@@ -158,10 +158,26 @@ Windows cannot find winget, the installer this line uses. On a machine that has 
     if ($Branch) { $arguments += @('--branch', $Branch) }
     if ($Path) { $arguments += @('--path', $Path) }
 
+    # The project's setup script writes the folder of the checkout here when it finishes. This
+    # window is the person's own, and people new to a terminal type `claude` in it right after the
+    # run - so it moves to that folder and picks up the PATH the run wrote, and `claude` starts
+    # in the project rather than wherever the window was (Ivan, 2026-09-25).
+    $checkoutFile = Join-Path $env:TEMP 'superb-setup.checkout'
+    Remove-Item $checkoutFile -ErrorAction SilentlyContinue
+
     & $bash $arguments
     if ($LASTEXITCODE -ne 0) {
         Write-Host ''
         Write-Host "Setup stopped (exit code $LASTEXITCODE). The message above says what to do." -ForegroundColor Red
+    }
+    elseif (Test-Path $checkoutFile) {
+        $checkout = (Get-Content $checkoutFile -TotalCount 1).Trim()
+        if ($checkout -and (Test-Path $checkout)) {
+            $paths = (@([Environment]::GetEnvironmentVariable('Path', 'User'), [Environment]::GetEnvironmentVariable('Path', 'Machine'), $env:Path) -join ';').Split(';')
+            $env:Path = ($paths | Where-Object { $_ } | Select-Object -Unique) -join ';'
+            Set-Location $checkout
+            Write-Host "This window is now in $checkout - type claude to start." -ForegroundColor Green
+        }
     }
 }
 catch {
