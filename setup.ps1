@@ -13,7 +13,7 @@ param(
     [Parameter(Position = 2)] [string] $Path
 )
 
-$contact = 'Ask Ivan Murashka (@imurashka) or Nikolay (@nternovoy).'
+$contact = 'Ask Ivan Murashka (@imurashka).'
 $starterUrl = 'https://super-banana-studios.github.io/setup.sh'
 
 function Write-Step([string] $text) {
@@ -108,7 +108,7 @@ try {
         Write-Host ''
         Write-Host 'Usage:'
         Write-Host '  & ([scriptblock]::Create((irm <this url>))) -Repo <owner>/<repo> [-Branch <branch>] [-Path <directory>]'
-        throw 'Ask the person who onboarded you for the full line - theirs already carries the project.'
+        throw 'The full line names the project, so ask for that one.'
     }
     if ($Repo -notmatch '^[^/\s]+/[^/\s]+$') {
         throw "`"$Repo`" is not a repository name. It looks like owner/repository, for example my-org/my-project."
