@@ -10,7 +10,8 @@
 
 set -u
 
-CONTACT="Ask Ivan Murashka (@imurashka) or Nikolay (@nternovoy)."
+CONTACT="Ask Ivan Murashka (@imurashka)."
+ACCESS_CONTACT="Ask Nikolay (@nternovoy), who gives access to GitHub, Claude and Unity."
 POWERSHELL_LINE='& ([scriptblock]::Create((irm https://super-banana-studios.github.io/setup.ps1))) -Repo <owner>/<repo>'
 
 repo=""
@@ -25,6 +26,11 @@ step() { printf '\n==> %s\n' "$*"; }
 fail() {
 	printf '\n%s\n%s\n' "$*" "$CONTACT" >&2
 	exit 1
+}
+
+fail_access() {
+	CONTACT=$ACCESS_CONTACT
+	fail "$@"
 }
 
 usage() {
@@ -79,7 +85,7 @@ if [ -z "$repo" ]; then
 	say "This line needs to know which project to set up, and it was pasted without that part."
 	say ""
 	usage
-	fail "Ask the person who onboarded you for the full line - theirs already carries the project."
+	fail "The full line names the project, so ask for that one."
 fi
 
 case "$repo" in
@@ -175,7 +181,7 @@ else
 	say "then shows a code and waits for Enter. Enter opens the browser: sign in with your GitHub"
 	say "account there, type the code, then come back here."
 	gh auth login --hostname github.com --web --git-protocol https ||
-		fail "The GitHub sign-in did not finish, so nothing further can be downloaded."
+		fail_access "The GitHub sign-in did not finish, so nothing further can be downloaded."
 fi
 gh auth setup-git --hostname github.com || fail "git could not be pointed at your GitHub sign-in."
 
@@ -184,10 +190,10 @@ gh repo view "$repo" --json name >/dev/null 2>&1
 access=$?
 if [ "$access" -ne 0 ]; then
 	if [ "$access" -eq 4 ]; then
-		fail "You are not signed in to GitHub, so your access to $repo cannot be checked. Run the line again."
+		fail_access "You are not signed in to GitHub, so your access to $repo cannot be checked. Run the line again."
 	fi
 	who=$(gh api user --jq .login 2>/dev/null)
-	fail "Your GitHub account (${who:-unknown}) cannot see $repo, so it is either not there or not yours to read yet. You are probably not in the Super Banana dev team."
+	fail_access "Your GitHub account (${who:-unknown}) cannot see $repo, so it is either not there or not yours to read yet. You are probably not in the Super Banana dev team."
 fi
 say "You can read $repo."
 
