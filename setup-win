@@ -5,8 +5,10 @@
 #
 # `irm ... | iex` cannot pass arguments to what it runs - the script arrives as text and nothing
 # else - so the repository whose tools/setup.sh does the work is named here. That script takes
-# the folder the window stands in as the projects folder. super-banana.cmd next to this file runs
-# the same line from the folder it lies in, with a double click.
+# the folder the window stands in as the projects folder. super-banana.cmd next to this file does
+# the same from the folder it lies in, with a double click, but downloads setup.ps1 and runs it as
+# a file: Microsoft Defender takes `powershell -ExecutionPolicy Bypass -Command "irm ... | iex"`
+# started from a batch file for Trojan:Win32/Commando.A!ml and kills it (2026-10-15).
 #
 # No `exit` anywhere: this runs inside the person's own PowerShell window, and `exit` closes that
 # window rather than this script (measured on 5.1.26100.9444).
